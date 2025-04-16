@@ -16,6 +16,8 @@ document.getElementById("check-form").addEventListener("submit", async (e) => {
     const bookingData = bookingSnap.data();
     resultDiv.innerHTML = `
       <p><strong>Name:</strong> ${bookingData.name}</p>
+      <p><strong>Gender:</strong> ${bookingData.gender}</p>
+      <p><strong>Age:</strong> ${bookingData.age}</p>
       <p><strong>Phone:</strong> ${bookingData.phone}</p>
       <p><strong>Slot ID:</strong> ${bookingData.slotId}</p>
       <p><strong>Payment Mode:</strong> ${bookingData.paymentMode}</p>

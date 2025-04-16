@@ -15,6 +15,19 @@
           <input id="name" type="text" class="w-full border p-2 rounded" required />
         </div>
         <div>
+          <label for="gender" class="block font-semibold">Gender:</label>
+          <select id="gender" class="w-full border p-2 rounded" required>
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="age" class="block font-semibold">Age:</label>
+          <input id="age" type="number" class="w-full border p-2 rounded" required />
+        </div>
+        <div>
           <label for="phone" class="block font-semibold">Phone:</label>
           <input id="phone" type="text" class="w-full border p-2 rounded" required />
         </div>
@@ -25,7 +38,7 @@
         <div>
           <label for="slot-select" class="block font-semibold">Select Time Slot:</label>
           <select id="slot-select" class="w-full border p-2 rounded" required>
-            <!-- Options will be dynamically populated (only non-full slots) -->
+            <!-- Options will be dynamically populated -->
           </select>
         </div>
         <div>
@@ -39,19 +52,11 @@
             </label>
           </div>
         </div>
-        <!-- UPI Info for GPay -->
-        <div id="upi-info" class="hidden">
-          <p class="text-sm text-gray-600">
-            Please pay to UPI ID: <span id="upi-id" class="font-bold"></span>
-          </p>
-          <button id="paid-btn" type="button" class="mt-2 bg-green-500 text-white px-4 py-2 rounded">I’ve Paid</button>
-        </div>
         <div>
           <button id="submit-btn" type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded">Confirm Booking</button>
         </div>
       </form>
     </div>
-
     <script type="module" src="../src/booking.js"></script>
   </body>
 </html>

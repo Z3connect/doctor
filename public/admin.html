@@ -4,92 +4,530 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Doctor Appointment - Admin Panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   </head>
-  <body class="bg-gray-100 p-6">
-    <div class="max-w-6xl mx-auto bg-white shadow p-6">
-      <h1 class="text-2xl font-bold mb-4">Admin Panel</h1>
-
-      <!-- Create Slot Section -->
-      <section class="mb-8">
-        <h2 class="text-xl font-semibold mb-2">Create Slot</h2>
-        <form id="slot-form" class="space-y-4">
-          <div>
-            <label for="slot-date" class="block font-semibold">Date (YYYY-MM-DD):</label>
-            <input id="slot-date" type="text" class="w-full border p-2 rounded" placeholder="2025-05-01" required />
-          </div>
-          <div>
-            <label for="opening-time" class="block font-semibold">Opening Time (e.g., 09:00 AM):</label>
-            <input id="opening-time" type="text" class="w-full border p-2 rounded" placeholder="09:00 AM" required />
-          </div>
-          <div>
-            <label for="closing-time" class="block font-semibold">Closing Time (e.g., 09:30 AM):</label>
-            <input id="closing-time" type="text" class="w-full border p-2 rounded" placeholder="09:30 AM" required />
-          </div>
-          <div>
-            <label for="max-patients" class="block font-semibold">Max Patients:</label>
-            <input id="max-patients" type="number" class="w-full border p-2 rounded" required />
-          </div>
-          <div>
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Create Slot</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- UPI Settings Section (Optional) -->
-      <section class="mb-8">
-        <h2 class="text-xl font-semibold mb-2">UPI Settings</h2>
-        <form id="upi-form" class="space-y-4">
-          <div>
-            <label for="upi-id-input" class="block font-semibold">UPI ID:</label>
-            <input id="upi-id-input" type="text" class="w-full border p-2 rounded" placeholder="yourupi@bank" required />
-          </div>
-          <div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update UPI</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Manage Slots Section -->
-      <section class="mb-8">
-        <h2 class="text-xl font-semibold mb-2">Manage Slots</h2>
-        <table id="slots-table" class="min-w-full border">
-          <thead>
-            <tr>
-              <th class="px-4 py-2 border">Date</th>
-              <th class="px-4 py-2 border">Time</th>
-              <th class="px-4 py-2 border">Max Patients</th>
-              <th class="px-4 py-2 border">Visibility</th>
-              <th class="px-4 py-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="slots-body">
-            <!-- Slots will be loaded dynamically -->
-          </tbody>
-        </table>
-      </section>
-
-      <!-- Bookings List Section -->
-      <section>
-        <h2 class="text-xl font-semibold mb-2">Bookings List</h2>
-        <table id="bookings-table" class="min-w-full border">
-          <thead>
-            <tr>
-              <th class="px-4 py-2 border">Name</th>
-              <th class="px-4 py-2 border">Phone</th>
-              <th class="px-4 py-2 border">Slot</th>
-              <th class="px-4 py-2 border">Payment</th>
-              <th class="px-4 py-2 border">Status</th>
-              <th class="px-4 py-2 border">Appointment Time</th>
-              <th class="px-4 py-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="bookings-body">
-            <!-- Bookings will be loaded dynamically -->
-          </tbody>
-        </table>
-      </section>
+  <body class="bg-gray-100 min-h-screen">
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Doctor Admin Panel</h1>
+        <div class="md:hidden">
+          <button id="mobile-menu-btn" class="text-white focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-blue-500 text-white p-4">
+      <a href="#create-slot" class="block py-2">Create Slot</a>
+      <a href="#upi-settings" class="block py-2">UPI Settings</a>
+      <a href="#manage-slots" class="block py-2">Manage Slots</a>
+      <a href="#bookings" class="block py-2">Bookings</a>
     </div>
+
+    <div class="max-w-7xl mx-auto p-4">
+      <!-- Dashboard Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-blue-100 mr-4">
+              <i class="fas fa-calendar text-blue-500 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Total Slots</p>
+              <h2 class="text-2xl font-bold" id="total-slots">--</h2>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-green-100 mr-4">
+              <i class="fas fa-user-check text-green-500 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Appointments</p>
+              <h2 class="text-2xl font-bold" id="total-bookings">--</h2>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-yellow-100 mr-4">
+              <i class="fas fa-clock text-yellow-500 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Pending Slots</p>
+              <h2 class="text-2xl font-bold" id="pending-slots">--</h2>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-purple-100 mr-4">
+              <i class="fas fa-rupee-sign text-purple-500 text-xl"></i>
+            </div>
+            <div>
+              <p class="text-gray-500 text-sm">Pending Payments</p>
+              <h2 class="text-2xl font-bold" id="pending-payments">--</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Tabs -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="flex flex-wrap border-b">
+          <button id="tab-create-slot" class="tab-btn px-6 py-3 font-medium text-sm focus:outline-none bg-blue-500 text-white">
+            Create Slot
+          </button>
+          <button id="tab-upi" class="tab-btn px-6 py-3 font-medium text-sm focus:outline-none">
+            UPI Settings
+          </button>
+          <button id="tab-manage-slots" class="tab-btn px-6 py-3 font-medium text-sm focus:outline-none">
+            Manage Slots
+          </button>
+          <button id="tab-bookings" class="tab-btn px-6 py-3 font-medium text-sm focus:outline-none">
+            Bookings
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-6">
+          <!-- Create Slot Section -->
+          <section id="create-slot" class="tab-content">
+            <h2 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fas fa-plus-circle text-blue-500 mr-2"></i>Create New Slot
+            </h2>
+            <form id="slot-form" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="slot-date" class="block font-medium text-gray-700 mb-1">Date</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-calendar text-gray-400"></i>
+                    </div>
+                    <input 
+                      id="slot-date" 
+                      type="date" 
+                      class="w-full border pl-10 p-2 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                      required 
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label for="max-patients" class="block font-medium text-gray-700 mb-1">Max Patients</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-users text-gray-400"></i>
+                    </div>
+                    <input 
+                      id="max-patients" 
+                      type="number" 
+                      class="w-full border pl-10 p-2 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                      required 
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="opening-time" class="block font-medium text-gray-700 mb-1">Opening Time</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-clock text-gray-400"></i>
+                    </div>
+                    <input 
+                      id="opening-time" 
+                      type="time" 
+                      class="w-full border pl-10 p-2 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                      required 
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label for="closing-time" class="block font-medium text-gray-700 mb-1">Closing Time</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-clock text-gray-400"></i>
+                    </div>
+                    <input 
+                      id="closing-time" 
+                      type="time" 
+                      class="w-full border pl-10 p-2 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                      required 
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex items-center mt-2">
+                <input id="slot-visible" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked />
+                <label for="slot-visible" class="ml-2 block text-sm text-gray-700">
+                  Make slot visible to patients immediately
+                </label>
+              </div>
+              
+              <div>
+                <button 
+                  type="submit" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition duration-150 ease-in-out flex items-center"
+                >
+                  <i class="fas fa-save mr-2"></i> Create Slot
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- UPI Settings Section -->
+          <section id="upi-settings" class="tab-content hidden">
+            <h2 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fas fa-rupee-sign text-blue-500 mr-2"></i>UPI Payment Settings
+            </h2>
+            <form id="upi-form" class="space-y-4">
+              <div>
+                <label for="upi-id-input" class="block font-medium text-gray-700 mb-1">UPI ID</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-money-bill-wave text-gray-400"></i>
+                  </div>
+                  <input 
+                    id="upi-id-input" 
+                    type="text" 
+                    class="w-full md:w-1/2 border pl-10 p-2 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                    placeholder="yourupi@bank" 
+                    required 
+                  />
+                </div>
+              </div>
+              <div class="flex items-center bg-blue-50 p-4 rounded-md mb-4">
+                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                <p class="text-sm text-blue-700">
+                  This UPI ID will be used for patient payments. Make sure it's accurate.
+                </p>
+              </div>
+              <div>
+                <button 
+                  type="submit" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition duration-150 ease-in-out flex items-center"
+                >
+                  <i class="fas fa-save mr-2"></i> Update UPI
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Manage Slots Section -->
+          <section id="manage-slots" class="tab-content hidden">
+            <h2 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fas fa-calendar-alt text-blue-500 mr-2"></i>Manage Appointment Slots
+            </h2>
+            <div class="bg-white overflow-hidden">
+              <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                <div class="relative mb-4 md:mb-0">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                  </div>
+                  <input 
+                    type="search" 
+                    id="slot-search" 
+                    class="border pl-10 p-2 rounded-md focus:ring-blue-500 focus:border-blue-500 w-full md:w-64" 
+                    placeholder="Search slots..." 
+                  />
+                </div>
+                <div class="flex space-x-2">
+                  <button id="slot-filter-all" class="bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    All
+                  </button>
+                  <button id="slot-filter-visible" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm">
+                    Visible
+                  </button>
+                  <button id="slot-filter-hidden" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm">
+                    Hidden
+                  </button>
+                </div>
+              </div>
+              <div class="overflow-x-auto">
+                <table id="slots-table" class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Max Patients</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="slots-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Slots will be loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Bookings List Section -->
+<!-- Bookings List Section -->
+<section id="bookings" class="tab-content">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-2">
+      <i class="fas fa-user-md text-blue-600 mr-3"></i>Patient Appointments
+    </h2>
+    <p class="text-gray-600">Manage all patient appointments and bookings</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+      <div class="flex justify-between">
+        <div>
+          <p class="text-sm text-gray-500 mb-1">Today's Appointments</p>
+          <h3 class="text-2xl font-bold text-gray-800" id="today-count">0</h3>
+        </div>
+        <div class="rounded-full bg-blue-100 p-3 flex items-center justify-center">
+          <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+      <div class="flex justify-between">
+        <div>
+          <p class="text-sm text-gray-500 mb-1">Confirmed</p>
+          <h3 class="text-2xl font-bold text-gray-800" id="confirmed-count">0</h3>
+        </div>
+        <div class="rounded-full bg-green-100 p-3 flex items-center justify-center">
+          <i class="fas fa-check-circle text-green-600 text-xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow">
+      <div class="flex justify-between">
+        <div>
+          <p class="text-sm text-gray-500 mb-1">Pending Payment</p>
+          <h3 class="text-2xl font-bold text-gray-800" id="pending-payment-count">0</h3>
+        </div>
+        <div class="rounded-full bg-yellow-100 p-3 flex items-center justify-center">
+          <i class="fas fa-rupee-sign text-yellow-600 text-xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
+      <div class="flex justify-between">
+        <div>
+          <p class="text-sm text-gray-500 mb-1">No Time Assigned</p>
+          <h3 class="text-2xl font-bold text-gray-800" id="no-time-count">0</h3>
+        </div>
+        <div class="rounded-full bg-purple-100 p-3 flex items-center justify-center">
+          <i class="fas fa-hourglass-half text-purple-600 text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Control Bar -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
+      <h3 class="font-semibold">Appointment Management</h3>
+    </div>
+    
+    <div class="p-4 border-b bg-gray-50">
+      <div class="flex flex-col lg:flex-row justify-between space-y-4 lg:space-y-0">
+        <!-- Left Side -->
+        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input 
+              type="search" 
+              id="booking-search" 
+              class="border border-gray-300 pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-64" 
+              placeholder="Search patients..." 
+            />
+          </div>
+          
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-calendar-alt text-gray-400"></i>
+            </div>
+            <input
+              type="date"
+              id="filter-date" 
+              class="border border-gray-300 pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+        
+        <!-- Right Side -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm text-gray-600 mr-2">Filter:</span>
+          <button id="booking-filter-all" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all hover:bg-blue-700">
+            All
+          </button>
+          <button id="booking-filter-today" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all hover:bg-gray-300">
+            Today
+          </button>
+          <button id="booking-filter-paid" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all hover:bg-gray-300">
+            Paid
+          </button>
+          <button id="booking-filter-pending" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all hover:bg-gray-300">
+            Payment Pending
+          </button>
+          <button id="booking-filter-no-time" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all hover:bg-gray-300">
+            No Time
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table id="bookings-table" class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Name</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Age</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Gender</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Phone</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Symptoms</span>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Slot</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Payment</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="group px-4 py-3 text-left">
+              <div class="flex items-center space-x-1 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                <span>Appointment</span>
+                <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i class="fas fa-sort text-gray-400"></i>
+                </button>
+              </div>
+            </th>
+            <th class="px-4 py-3 text-center">
+              <div class="text-xs font-medium text-gray-600 uppercase tracking-wider">
+                Actions
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="bookings-body" class="bg-white divide-y divide-gray-200">
+          <!-- Loading placeholder -->
+          <tr>
+            <td colspan="9" class="px-4 py-8 text-center">
+              <div class="flex flex-col items-center justify-center">
+                <div class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-600 border-t-transparent mb-4"></div>
+                <p class="text-gray-500">Loading appointments...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700" id="pagination-info">
+            Showing <span class="font-medium" id="page-start">1</span> to <span class="font-medium" id="page-end">10</span> of <span class="font-medium" id="total-items">--</span> appointments
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <button id="prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <i class="fas fa-chevron-left text-xs"></i>
+            </button>
+            <!-- Page numbers will be inserted dynamically -->
+            <div id="pagination-numbers" class="flex">
+              <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</button>
+            </div>
+            <button id="next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <i class="fas fa-chevron-right text-xs"></i>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results State (initially hidden) -->
+  <div id="no-results" class="hidden bg-white rounded-lg shadow-md p-8 mt-6 text-center">
+    <div class="text-gray-400 mb-4">
+      <i class="fas fa-search fa-3x"></i>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-700 mb-2">No appointments found</h3>
+    <p class="text-gray-500 mb-6">Try adjusting your search or filter criteria</p>
+    <button id="reset-filters" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors">
+      Reset Filters
+    </button>
+  </div>
+</section>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+      <div class="max-w-7xl mx-auto">
+        <p class="text-center text-sm">© 2025 Doctor Appointment System | Admin Panel</p>
+      </div>
+    </footer>
+
     <script type="module" src="../src/admin.js"></script>
   </body>
 </html>
