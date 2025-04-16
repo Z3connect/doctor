@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Doctor Appointment - Success</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded shadow">
+      <h1 class="text-2xl font-bold mb-4">Booking Confirmed!</h1>
+      <p class="mb-2">Your appointment has been booked.</p>
+      <p id="booking-details" class="mb-4"></p>
+      <p id="appointment-time" class="mb-4 text-green-600"></p>
+      <a href="index.html" class="bg-blue-500 text-white px-4 py-2 rounded">Back to Home</a>
+    </div>
+    <script type="module">
+      import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+      import { db } from "../src/firebase-init.js";
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingId = urlParams.get("bookingId");
+      document.getElementById("booking-details").textContent = "Booking ID: " + bookingId;
+      
+      (async () => {
+        const bookingDocRef = doc(db, "patients", bookingId);
+        const bookingSnap = await getDoc(bookingDocRef);
+        if (bookingSnap.exists()) {
+          const bookingData = bookingSnap.data();
+          if (bookingData.appointmentTime) {
+            document.getElementById("appointment-time").textContent = "Appointment Time: " + bookingData.appointmentTime;
+          } else {
+            document.getElementById("appointment-time").textContent = "Appointment time not yet assigned.";
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

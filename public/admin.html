@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Doctor Appointment - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 p-6">
+    <div class="max-w-6xl mx-auto bg-white shadow p-6">
+      <h1 class="text-2xl font-bold mb-4">Admin Panel</h1>
+
+      <!-- Create Slot Section -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-2">Create Slot</h2>
+        <form id="slot-form" class="space-y-4">
+          <div>
+            <label for="slot-date" class="block font-semibold">Date (YYYY-MM-DD):</label>
+            <input id="slot-date" type="text" class="w-full border p-2 rounded" placeholder="2025-05-01" required />
+          </div>
+          <div>
+            <label for="opening-time" class="block font-semibold">Opening Time (e.g., 09:00 AM):</label>
+            <input id="opening-time" type="text" class="w-full border p-2 rounded" placeholder="09:00 AM" required />
+          </div>
+          <div>
+            <label for="closing-time" class="block font-semibold">Closing Time (e.g., 09:30 AM):</label>
+            <input id="closing-time" type="text" class="w-full border p-2 rounded" placeholder="09:30 AM" required />
+          </div>
+          <div>
+            <label for="max-patients" class="block font-semibold">Max Patients:</label>
+            <input id="max-patients" type="number" class="w-full border p-2 rounded" required />
+          </div>
+          <div>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Create Slot</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- UPI Settings Section (Optional) -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-2">UPI Settings</h2>
+        <form id="upi-form" class="space-y-4">
+          <div>
+            <label for="upi-id-input" class="block font-semibold">UPI ID:</label>
+            <input id="upi-id-input" type="text" class="w-full border p-2 rounded" placeholder="yourupi@bank" required />
+          </div>
+          <div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update UPI</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Manage Slots Section -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-2">Manage Slots</h2>
+        <table id="slots-table" class="min-w-full border">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border">Date</th>
+              <th class="px-4 py-2 border">Time</th>
+              <th class="px-4 py-2 border">Max Patients</th>
+              <th class="px-4 py-2 border">Visibility</th>
+              <th class="px-4 py-2 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="slots-body">
+            <!-- Slots will be loaded dynamically -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Bookings List Section -->
+      <section>
+        <h2 class="text-xl font-semibold mb-2">Bookings List</h2>
+        <table id="bookings-table" class="min-w-full border">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border">Name</th>
+              <th class="px-4 py-2 border">Phone</th>
+              <th class="px-4 py-2 border">Slot</th>
+              <th class="px-4 py-2 border">Payment</th>
+              <th class="px-4 py-2 border">Status</th>
+              <th class="px-4 py-2 border">Appointment Time</th>
+              <th class="px-4 py-2 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-body">
+            <!-- Bookings will be loaded dynamically -->
+          </tbody>
+        </table>
+      </section>
+    </div>
+    <script type="module" src="../src/admin.js"></script>
+  </body>
+</html>
