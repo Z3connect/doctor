@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Doctor Appointment - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold">Doctor Admin</h1>
+        <button id="mobile-menu-btn" class="md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-blue-500 text-white p-4">
+      <a href="#create-slot" class="block py-2">Create Slot</a>
+      <a href="#upi-settings" class="block py-2">UPI Settings</a>
+      <a href="#manage-slots" class="block py-2">Manage Slots</a>
+      <a href="#bookings" class="block py-2">Bookings</a>
+      <a href="#reports" class="block py-2">Reports</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+      <!-- Dashboard Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="bg-white p-3 rounded shadow">
+          <div class="flex items-center">
+            <i class="fas fa-calendar text-blue-500 mr-3"></i>
+            <div>
+              <p class="text-xs text-gray-500">Total Slots</p>
+              <h2 class="text-lg font-bold" id="total-slots">--</h2>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-3 rounded shadow">
+          <div class="flex items-center">
+            <i class="fas fa-user-check text-green-500 mr-3"></i>
+            <div>
+              <p class="text-xs text-gray-500">Appointments</p>
+              <h2 class="text-lg font-bold" id="total-bookings">--</h2>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-3 rounded shadow">
+          <div class="flex items-center">
+            <i class="fas fa-clock text-yellow-500 mr-3"></i>
+            <div>
+              <p class="text-xs text-gray-500">Pending Slots</p>
+              <h2 class="text-lg font-bold" id="pending-slots">--</h2>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-3 rounded shadow">
+          <div class="flex items-center">
+            <i class="fas fa-rupee-sign text-purple-500 mr-3"></i>
+            <div>
+              <p class="text-xs text-gray-500">Pending Payments</p>
+              <h2 class="text-lg font-bold" id="pending-payments">--</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-white rounded shadow mb-6">
+        <div class="flex overflow-x-auto">
+          <button id="tab-create-slot" class="tab-btn px-4 py-2 font-medium text-sm focus:outline-none bg-blue-500 text-white">
+            Create Slot
+          </button>
+          <button id="tab-upi" class="tab-btn px-4 py-2 font-medium text-sm focus:outline-none">
+            UPI Settings
+          </button>
+          <button id="tab-manage-slots" class="tab-btn px-4 py-2 font-medium text-sm focus:outline-none">
+            Manage Slots
+          </button>
+          <button id="tab-bookings" class="tab-btn px-4 py-2 font-medium text-sm focus:outline-none">
+            Bookings
+          </button>
+          <button id="tab-reports" class="tab-btn px-4 py-2 font-medium text-sm focus:outline-none">
+            Reports
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-4">
+          <!-- Create Slot Section -->
+          <section id="create-slot" class="tab-content">
+            <h2 class="text-lg font-semibold mb-3">Create New Slot</h2>
+            <form id="slot-form" class="space-y-3">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="slot-date" class="block text-sm mb-1">Date</label>
+                  <input id="slot-date" type="date" class="w-full border p-2 rounded" required />
+                </div>
+                <div>
+                  <label for="max-patients" class="block text-sm mb-1">Max Patients</label>
+                  <input id="max-patients" type="number" class="w-full border p-2 rounded" required />
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="opening-time" class="block text-sm mb-1">Opening Time</label>
+                  <input id="opening-time" type="time" class="w-full border p-2 rounded" required />
+                </div>
+                <div>
+                  <label for="closing-time" class="block text-sm mb-1">Closing Time</label>
+                  <input id="closing-time" type="time" class="w-full border p-2 rounded" required />
+                </div>
+              </div>
+              
+              <div class="flex items-center mt-2">
+                <input id="slot-visible" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked />
+                <label for="slot-visible" class="ml-2 block text-sm text-gray-700">
+                  Make slot visible to patients immediately
+                </label>
+              </div>
+              
+              <div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                  <i class="fas fa-save mr-2"></i> Create Slot
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- UPI Settings Section -->
+          <section id="upi" class="tab-content hidden">
+            <h2 class="text-lg font-semibold mb-3">UPI Payment Settings</h2>
+            <form id="upi-form" class="space-y-3">
+              <div>
+                <label for="upi-id-input" class="block text-sm mb-1">UPI ID</label>
+                <input id="upi-id-input" type="text" class="w-full md:w-1/2 border p-2 rounded" placeholder="yourupi@bank" required />
+              </div>
+              <div class="bg-blue-50 p-3 rounded text-sm text-blue-700">
+                <i class="fas fa-info-circle mr-1"></i>
+                This UPI ID will be used for patient payments. Make sure it's accurate.
+              </div>
+              <div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                  <i class="fas fa-save mr-2"></i> Update UPI
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Manage Slots Section -->
+          <section id="manage-slots" class="tab-content hidden">
+            <h2 class="text-lg font-semibold mb-3">Manage Appointment Slots</h2>
+            <div class="mb-3 flex flex-col md:flex-row justify-between items-center">
+              <div class="w-full md:w-64 mb-2 md:mb-0">
+                <input type="search" id="slot-search" class="w-full border p-2 rounded" placeholder="Search slots..." />
+              </div>
+              <div class="flex space-x-1">
+                <button id="slot-filter-all" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">All</button>
+                <button id="slot-filter-visible" class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">Visible</button>
+                <button id="slot-filter-hidden" class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">Hidden</button>
+              </div>
+            </div>
+            <div class="overflow-x-auto bg-white rounded shadow">
+              <table id="slots-table" class="min-w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Patients</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="slots-body" class="divide-y divide-gray-200">
+                  <!-- Slots will be loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Bookings List Section -->
+          <section id="bookings" class="tab-content hidden">
+            <h2 class="text-lg font-semibold mb-3">Patient Appointments</h2>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+              <div class="bg-white p-2 rounded shadow border-l-2 border-blue-500">
+                <p class="text-xs text-gray-500">Today's Appointments</p>
+                <h3 class="text-lg font-bold" id="today-count">0</h3>
+              </div>
+              <div class="bg-white p-2 rounded shadow border-l-2 border-green-500">
+                <p class="text-xs text-gray-500">Confirmed</p>
+                <h3 class="text-lg font-bold" id="confirmed-count">0</h3>
+              </div>
+              <div class="bg-white p-2 rounded shadow border-l-2 border-yellow-500">
+                <p class="text-xs text-gray-500">Pending Payment</p>
+                <h3 class="text-lg font-bold" id="pending-payment-count">0</h3>
+              </div>
+              <div class="bg-white p-2 rounded shadow border-l-2 border-purple-500">
+                <p class="text-xs text-gray-500">No Time Assigned</p>
+                <h3 class="text-lg font-bold" id="no-time-count">0</h3>
+              </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="bg-white rounded shadow mb-4">
+              <div class="bg-blue-600 text-white p-2">
+                <h3 class="text-sm font-semibold">Filters</h3>
+              </div>
+              <div class="p-3 flex flex-wrap items-center gap-2">
+                <div class="w-full md:w-auto flex mb-2 md:mb-0">
+                  <input type="search" id="booking-search" class="border rounded p-1 text-sm w-full md:w-48" placeholder="Search..." />
+                  <input type="date" id="filter-date" class="border rounded p-1 text-sm ml-1" />
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  <button id="booking-filter-all" class="bg-blue-600 text-white px-2 py-1 rounded text-xs">All</button>
+                  <button id="booking-filter-today" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Today</button>
+                  <button id="booking-filter-paid" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Paid</button>
+                  <button id="booking-filter-pending" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Pending</button>
+                  <button id="booking-filter-no-time" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">No Time</button>
+                  <button id="booking-filter-priority" class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Sort by Priority</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto bg-white rounded shadow">
+              <table id="bookings-table" class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Name</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Age/Gender</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Phone</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Symptoms</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Slot</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Payment</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">
+                      <div class="flex items-center space-x-1">
+                        <span>Booking Time</span>
+                        <button class="sort-btn opacity-0 group-hover:opacity-100 transition-opacity" data-field="bookingTimestamp">
+                          <i class="fas fa-sort text-gray-400"></i>
+                        </button>
+                      </div>
+                    </th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Appointment Time</th>
+                    <th class="px-3 py-2 text-center text-xs font-medium text-gray-500">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="bookings-body" class="divide-y divide-gray-200">
+                  <!-- Loading placeholder -->
+                  <tr>
+                    <td colspan="9" class="px-3 py-4 text-center">
+                      <div class="inline-block w-6 h-6 border-4 rounded-full text-blue-600 border-t-transparent animate-spin"></div>
+                      <p class="text-gray-500">Loading...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="bg-gray-50 p-2 flex items-center justify-between border-t border-gray-200 mt-1 rounded-b shadow">
+              <p class="text-xs text-gray-700" id="pagination-info">
+                Showing <span id="page-start">1</span> to <span id="page-end">10</span> of <span id="total-items">--</span>
+              </p>
+              <div class="flex">
+                <button id="prev-page" class="bg-white border border-gray-300 text-gray-500 px-2 py-1 text-xs rounded-l">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <div id="pagination-numbers" class="flex"></div>
+                <button id="next-page" class="bg-white border border-gray-300 text-gray-500 px-2 py-1 text-xs rounded-r">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- No Results State -->
+            <div id="no-results" class="hidden bg-white p-4 mt-3 text-center rounded shadow">
+              <i class="fas fa-search text-gray-400 text-2xl mb-2"></i>
+              <h3 class="text-gray-700 mb-2">No appointments found</h3>
+              <button id="reset-filters" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">
+                Reset Filters
+              </button>
+            </div>
+          </section>
+
+          <!-- Reports Section -->
+          <section id="reports" class="tab-content hidden">
+            <h2 class="text-lg font-semibold mb-3">Appointment Analytics</h2>
+            
+            <!-- Date range selector -->
+            <div class="bg-white p-3 rounded shadow mb-4">
+              <div class="flex flex-wrap gap-2 items-end">
+                <div>
+                  <label class="block text-xs mb-1">Start Date</label>
+                  <input type="date" id="report-start-date" class="border rounded p-1 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs mb-1">End Date</label>
+                  <input type="date" id="report-end-date" class="border rounded p-1 text-sm" />
+                </div>
+                <div>
+                  <button id="generate-report" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                    Generate Report
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div class="bg-white p-3 rounded shadow">
+                <p class="text-xs text-gray-500">Total Appointments</p>
+                <h3 class="text-lg font-bold" id="report-total-count">0</h3>
+              </div>
+              <div class="bg-white p-3 rounded shadow">
+                <p class="text-xs text-gray-500">Daily Average</p>
+                <h3 class="text-lg font-bold" id="report-daily-avg">0</h3>
+              </div>
+              <div class="bg-white p-3 rounded shadow">
+                <p class="text-xs text-gray-500">Highest Day</p>
+                <h3 class="text-lg font-bold" id="report-max-day">-</h3>
+              </div>
+              <div class="bg-white p-3 rounded shadow">
+                <p class="text-xs text-gray-500">Revenue</p>
+                <h3 class="text-lg font-bold" id="report-revenue">₹0</h3>
+              </div>
+            </div>
+            
+            <!-- Chart -->
+            <div class="bg-white p-3 rounded shadow mb-4">
+              <h3 class="text-sm font-semibold mb-2">Day-wise Appointments</h3>
+              <div id="daily-chart" class="w-full h-56"></div>
+            </div>
+            
+            <!-- Daily Table -->
+            <div class="bg-white rounded shadow">
+              <div class="bg-gray-50 p-2 border-b">
+                <h3 class="text-sm font-semibold">Appointments by Day</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Date</th>
+                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Count</th>
+                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Gender</th>
+                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Payment</th>
+                    </tr>
+                  </thead>
+                  <tbody id="daily-report-body" class="divide-y divide-gray-200">
+                    <tr>
+                      <td colspan="4" class="px-3 py-3 text-center text-sm text-gray-500">
+                        Select a date range and generate the report
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white p-2 text-center text-xs mt-6">
+      © 2025 Doctor Appointment System
+    </footer>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>

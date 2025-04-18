@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Doctor Appointment - Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 p-6">
+    <div class="max-w-md mx-auto bg-white shadow p-6">
+      <h1 class="text-2xl font-bold mb-4">Book Appointment</h1>
+      <form id="booking-form" class="space-y-4">
+        <div>
+          <label for="name" class="block font-semibold">Name:</label>
+          <input id="name" type="text" class="w-full border p-2 rounded" required />
+        </div>
+        <div>
+          <label for="gender" class="block font-semibold">Gender:</label>
+          <select id="gender" class="w-full border p-2 rounded" required>
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="age" class="block font-semibold">Age:</label>
+          <input id="age" type="number" class="w-full border p-2 rounded" required />
+        </div>
+        <div>
+          <label for="phone" class="block font-semibold">Phone:</label>
+          <input id="phone" type="text" class="w-full border p-2 rounded" required />
+        </div>
+        <div>
+          <label for="symptoms" class="block font-semibold">Symptoms:</label>
+          <textarea id="symptoms" class="w-full border p-2 rounded" rows="3"></textarea>
+        </div>
+        <div>
+          <label for="slot-select" class="block font-semibold">Select Time Slot:</label>
+          <select id="slot-select" class="w-full border p-2 rounded" required>
+            <!-- Options will be dynamically populated -->
+          </select>
+        </div>
+        <div>
+          <label class="block font-semibold">Payment Method:</label>
+          <div class="flex space-x-4">
+            <label class="flex items-center">
+              <input type="radio" name="paymentMode" value="gpay" class="mr-2" checked /> GPay
+            </label>
+            <label class="flex items-center">
+              <input type="radio" name="paymentMode" value="cash" class="mr-2" /> Cash
+            </label>
+          </div>
+        </div>
+        <div>
+          <button id="submit-btn" type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded">Confirm Booking</button>
+        </div>
+      </form>
+    </div>
+    <script type="module" src="/src/booking.js"></script>
+  </body>
+</html>
